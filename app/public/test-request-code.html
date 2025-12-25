@@ -1,47 +1,58 @@
 <!doctype html>
 <html lang="de">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>OTP Test</title>
-  </head>
-  <body style="font-family: system-ui; padding: 16px;">
-    <h1>OTP Test</h1>
+<head>
+  <meta charset="utf-8" />
+  <title>OTP Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body style="font-family: system-ui; padding: 16px">
 
-    <p>E-Mail:</p>
-    <input
-      id="email"
-      style="padding:10px; width:320px;"
-      placeholder="deine@mail.de"
-    />
-    <button
-      id="btn"
-      style="padding:10px 14px; margin-left:6px;"
-    >
-      Code anfordern
-    </button>
+<h1>OTP Test</h1>
 
-    <pre
-      id="out"
-      style="margin-top:16px; background:#f3f3f3; padding:12px;"
-    ></pre>
+<p>E-Mail:</p>
+<input id="email" style="padding:10px; width:320px" placeholder="deine@mail.de" />
+<button id="btnReq" style="padding:10px 14px; margin-left:6px">
+  Code anfordern
+</button>
 
-    <script>
-      const out = document.getElementById("out");
+<p style="margin-top:16px">Code:</p>
+<input id="code" style="padding:10px; width:160px" placeholder="123456" />
+<button id="btnVerify" style="padding:10px 14px; margin-left:6px">
+  Code prüfen
+</button>
 
-      document.getElementById("btn").onclick = async () => {
-        out.textContent = "Sende...";
-        const email = document.getElementById("email").value.trim();
+<pre id="out" style="margin-top:16px; background:#f3f3f3; padding:12px"></pre>
 
-        const res = await fetch("/api/request-code", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: email })
-        });
+<script>
+const out = document.getElementById("out");
 
-        const text = await res.text();
-        out.textContent = `Status: ${res.status}\nAntwort: ${text}`;
-      };
-    </script>
-  </body>
+document.getElementById("btnReq").onclick = async () => {
+  out.textContent = "Sende Code...";
+  const email = document.getElementById("email").value.trim();
+
+  const res = await fetch("/api/request-code", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  });
+
+  out.textContent = `Status: ${res.status}\n${await res.text()}`;
+};
+
+document.getElementById("btnVerify").onclick = async () => {
+  out.textContent = "Prüfe Code...";
+  const email = document.getElementById("email").value.trim();
+  const code  = document.getElementById("code").value.trim();
+
+  const res = await fetch("/api/verify-code", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, code })
+  });
+
+  out.textContent = `Status: ${res.status}\n${await res.text()}`;
+};
+</script>
+
+</body>
 </html>
