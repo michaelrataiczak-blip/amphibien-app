@@ -1,14 +1,15 @@
 {
-  "name": "",
+  "name": "amphibien-api",
   "version": "1.0.0",
   "description": "",
-  "main": "src/functions/*.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "func start",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
     "@azure/functions": "^4.0.0",
+    "@azure/data-tables": "^14.2.0",
     "nodemailer": "^6.9.14"
   },
   "devDependencies": {
