@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="de">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OTP Test</title>
+  <body style="font-family: system-ui; padding: 16px;">
+    <h1>OTP Test</h1>
+    <p>E-Mail:</p>
+    <input id="email" style="padding:10px; width:320px;" placeholder="deine@mail.de" />
+    <button id="btn" style="padding:10px 14px; margin-left:6px;">Code anfordern</button>
+    <pre id="out" style="margin-top:16px; background:#f3f3f3; padding:12px;"></pre>
+
+    <script>
+      const out = document.getElementById("out");
+      document.getElementById("btn").onclick = async () => {
+        out.textContent = "Sende...";
+        const email = document.getElementById("email").value.trim();
+        const res = await fetch("/api/request-code", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ email: email })
+});
+        const text = await res.text();
+        out.textContent = `Status: ${res.status}\nAntwort: ${text}`;
+      };
+    </script>
+  </body>
+</html>
