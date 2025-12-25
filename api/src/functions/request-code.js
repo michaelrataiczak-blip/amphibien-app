@@ -1,14 +1,14 @@
 const { app } = require("@azure/functions");
 const nodemailer = require("nodemailer");
 
-app.http("request-code", {
+app.http("requestCode", {
   methods: ["POST"],
   authLevel: "anonymous",
+  route: "request-code",
   handler: async (req, context) => {
     try {
       const body = await req.json().catch(() => ({}));
       const email = String(body.email || "").trim().toLowerCase();
-
       if (!email) return { status: 400, body: "E-Mail fehlt" };
 
       const host = process.env.SMTP_HOST;
@@ -24,9 +24,7 @@ app.http("request-code", {
       }
 
       const transporter = nodemailer.createTransport({
-        host,
-        port,
-        secure, // 587=false (STARTTLS), 465=true (SSL)
+        host, port, secure,
         auth: { user, pass }
       });
 
@@ -45,10 +43,9 @@ app.http("request-code", {
         body: JSON.stringify({ ok: true })
       };
     } catch (err) {
-      context.error("request-code error", err);
+      context.error("requestCode error", err);
       return { status: 500, body: "Fehler beim Mailversand" };
     }
   }
 });
 
-};
