@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useMsal } from "@azure/msal-react";
+import { loginRequest } from "./authConfig";
 
 function App() {
+  const { instance, accounts } = useMsal();
+
+  const handleLogin = () => {
+    instance.loginRedirect(loginRequest);
+  };
+
+  const handleLogout = () => {
+    instance.logoutRedirect();
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ padding: "2rem" }}>
+      <h1>Amphibien Erfassung</h1>
+
+      {accounts.length === 0 ? (
+        <button onClick={handleLogin}>
+          Login (E-Mail Einmalcode)
+        </button>
+      ) : (
+        <>
+          <p>
+            Angemeldet als: <b>{accounts[0].username}</b>
+          </p>
+          <button onClick={handleLogout}>Logout</button>
+        </>
+      )}
     </div>
   );
 }
